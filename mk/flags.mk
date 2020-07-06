@@ -173,7 +173,6 @@ cppflags_fn = \
 	-I$(call $1,$(SRC_DIR))/compat/linux/include \
 	-I$(call $1,$(SRC_DIR))/compat/posix/include \
 	-I$(call $1,$(SRC_DIR))/compat/libc/include \
-	-I$(abspath $(SRC_DIR)/compat/cxx/include) \
 	-nostdinc \
 	-MMD -MP# -MT $@ -MF $(@:.o=.d)
 
@@ -218,11 +217,11 @@ override CXXFLAGS = $(COMMON_CCFLAGS)
 #override CXXFLAGS += -fno-rtti
 #override CXXFLAGS += -fno-exceptions
 #override CXXFLAGS += -fno-threadsafe-statics
-override CXXFLAGS += -I$(abspath $(SRC_DIR)/compat/cxx/include)
+#override CXXFLAGS += -I$(abspath $(SRC_DIR)/compat/cxx/include)
 #	C++ has build-in type bool
 override CXXFLAGS += -DSTDBOOL_H_
 override CXXFLAGS += $(cxxflags)
-override CXXFLAGS += -std=gnu++11
+#override CXXFLAGS += -std=gnu++11
 
 # Compiler flags
 cflags := $(CFLAGS)

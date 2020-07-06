@@ -31,7 +31,7 @@ abstract module DestructionPolicy {
 	source "cxx_destruction_signatures.h"
 }
 
-module DestructionStatic extends DestructionPolicy {
+static module DestructionStatic extends DestructionPolicy {
 	option number table_size = 50
 	source "cxx_destruction_static.c"
 }

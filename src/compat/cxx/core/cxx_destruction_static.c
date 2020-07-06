@@ -8,6 +8,8 @@
 #include <embox/unit.h>
 #include <stdio.h>
 
+#if 1
+
 #include "cxx_destruction_signatures.h"
 
 #define TABLE_SIZE OPTION_GET(NUMBER,table_size)
@@ -67,3 +69,5 @@ void __cxa_finalize(void *f) {
 void cxx_invoke_destructors(void) {
 	__cxa_finalize(0);
 }
+
+#endif

@@ -26,12 +26,10 @@ else
 $(error Unsupported architecture: $(EMBOX_ARCH))
 endif
 
-target_libgcc_cppflags := -DLIBGCC2_HAS_XF_MODE=0 \
-	-DDO_GLOBAL_CTORS_BODY -DDO_GLOBAL_DTORS_BODY \
-	-DNAME__MAIN -DSYMBOL__MAIN=__embox_register_eh_frame_once
 cppflags = -I$(ROOT_DIR)/third-party/gcc/include \
 	$${EMBOX_IMPORTED_CPPFLAGS} \
 	-I$(PKG_BUILD_DIR)/gcc/include
+
 PKG_BUILD_DIR  := $(BUILD_DIR)/build
 
 EMBOX_DERIVED_CXXFLAGS = $(filter -g% -f% -m% -O% -G% -E% -Wa%,$(EMBOX_CXXFLAGS))
@@ -51,14 +49,18 @@ $(CONFIGURE) :
 			--disable-tls \
 			--disable-nls \
 			--disable-libssp \
+			--disable-libstdcxx-pch \
+			--disable-libstdcxx-dual-abi \
+			--disable-libstdcxx-filesystem-ts \
 			--without-headers \
 			--without-newlib \
+			--without-pic \
 			--enable-languages=c,c++ \
 			--enable-soft-float \
 			CC_FOR_TARGET=$${EMBOX_CROSS_COMPILE}gcc \
 			CXX_FOR_TARGET=$${EMBOX_CROSS_COMPILE}g++ \
-			CFLAGS_FOR_TARGET="$(cppflags) $(target_libgcc_cppflags) $${EMBOX_IMPORTED_CFLAGS}" \
-			CXXFLAGS_FOR_TARGET="$(cppflags) $(GCC_IMPORTED_CXXFLAGS) -fpermissive" \
+			CFLAGS_FOR_TARGET="$(cppflags) -march=armv5te -mtune=arm926ej-s " \
+			CXXFLAGS_FOR_TARGET="$(cppflags) -march=armv5te -mtune=arm926ej-s -fpermissive" \
 			LDFLAGS_FOR_TARGET="$${EMBOX_IMPORTED_LDFLAGS}"; \
 	)
 	touch $@
@@ -70,8 +72,8 @@ $(BUILD) :
 			GCC_FOR_TARGET=$${EMBOX_CROSS_COMPILE}gcc \
 			CXX_FOR_TARGET=$${EMBOX_CROSS_COMPILE}g++ \
 			RAW_CXX_FOR_TARGET=$${EMBOX_CROSS_COMPILE}g++ \
-			AR_FOR_TARGET=ar \
-			RANLIB_FOR_TARGET=ranlib \
+			AR_FOR_TARGET=arm-none-eabi-ar \
+			RANLIB_FOR_TARGET=arm-none-eabi-ranlib \
 			TARGET-libiberty="LINKER=true CC=true AR=true RANLIB=touch all" \
 			TARGET-zlib="LINKER=true CC=true AR=true RANLIB=touch all" \
 			TARGET-libbacktrace="LINKER=true CC=true AR=touch \
