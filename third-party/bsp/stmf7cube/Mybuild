@@ -14,6 +14,8 @@ abstract module stm32f7_discovery_components {
 
 @BuildDepends(third_party.bsp.st_bsp_api)
 module arch extends embox.arch.arch {
+	option boolean enable_cpu_cache = false
+
 	source "arch.c"
 
 	depends system_init
