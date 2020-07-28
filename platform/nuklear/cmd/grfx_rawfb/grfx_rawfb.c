@@ -40,6 +40,8 @@
 #include <drivers/video/fb.h>
 #include <drivers/input/input_dev.h>
 
+#include "stm32746g_discovery_lcd.h"
+
 #define USE_DMA   OPTION_GET(BOOLEAN, use_dma)
 
 #if USE_DMA
@@ -166,7 +168,7 @@ int main(int argc, char *argv[]) {
 	height = fb_info->var.yres;
 
 	for (i = 0; i < 2; i++) {
-		fb_buf[i] = malloc(height * width * 4);
+		fb_buf[i] = memalign(64, height * width * 4);
 		if (!fb_buf[i]) {
 			fprintf(stderr, "Cannot allocate buffer for screen\n");
 			goto out_free_fb_buf;
@@ -201,6 +203,9 @@ int main(int argc, char *argv[]) {
 #if USE_DMA
 	dma_config(0);
 #endif
+
+	BSP_LCD_LayerDefaultInit(0, (uint32_t) fb_buf[0]);
+	BSP_LCD_LayerDefaultInit(1, (uint32_t) fb_buf[1]);
 
 	while (1) {
 		/* Input */
@@ -256,7 +261,8 @@ int main(int argc, char *argv[]) {
 		if (nk_window_is_closed(&rawfb->ctx, "Demo")) break;
 
 		/* Draw framebuffer */
-		nk_rawfb_render(rawfb, nk_rgb(30,30,30), 1);
+		//nk_rawfb_render(rawfb, nk_rgb(30,30,30), 1);
+		nk_rawfb_render(rawfb, nk_rgb(30,30,30), 0);
 
 		if (fb_info->var.fmt != BGRA8888) {
 			pix_fmt_convert(fb_buf[fb_buf_idx], fb_info->screen_base, width * height,
@@ -275,11 +281,18 @@ int main(int argc, char *argv[]) {
 				printf("DMA transfer failed\n");
 			}
 #else
-			memcpy(fb_info->screen_base, fb_buf[fb_buf_idx], width * height * bpp);
+			//memcpy(fb_info->screen_base, fb_buf[fb_buf_idx], width * height * bpp);
+			BSP_LCD_SetTransparency_NoReload(fb_buf_idx, 0xff);
+			//BSP_LCD_SetLayerAddress(0, (uint32_t) fb_buf[fb_buf_idx]);
 #endif
 		}
 
 		fb_buf_idx = (fb_buf_idx + 1) % 2;
+
+		BSP_LCD_SetTransparency(fb_buf_idx, 0x00);
+
+		BSP_LCD_SelectLayer(fb_buf_idx);
+		BSP_LCD_Clear(0xff303030);
 
 		nk_rawfb_resize_fb(rawfb, fb_buf[fb_buf_idx], width, height, width * 4,
 			PIXEL_LAYOUT_XRGB_8888);

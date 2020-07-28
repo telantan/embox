@@ -12,6 +12,7 @@ package embox.cmd.grfxs
 			Alexander Kalmuk
 	''')
 @BuildDepends(third_party.lib.nuklear)
+@BuildDepends(third_party.bsp.st_bsp_api)
 module grfx_rawfb {
 	option boolean use_dma = false
 
@@ -20,4 +21,5 @@ module grfx_rawfb {
 
 	depends third_party.lib.nuklear
 	depends embox.driver.input.core
+	depends third_party.bsp.st_bsp_api
 }
