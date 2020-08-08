@@ -30,33 +30,35 @@ struct device_conf {
 };
 
 struct uart_conf {
+	int status;
 	const char *name;
-	const char *status;
 	struct device_conf dev;
 	unsigned int baudrate;
 };
 
 struct spi_conf {
+	int status;
 	const char *name;
-	const char *status;
 	struct device_conf dev;
 	struct field_pin cs[64];
 };
 
 struct i2c_conf {
+	int status;
 	const char *name;
-	const char *status;
 	struct device_conf dev;
 };
 
 struct eth_conf {
+	int status;
 	const char *name;
-	const char *status;
 	struct device_conf dev;
 };
 
-#define ENABLED  "enabled"
-#define DISABLED "disabled"
+#define CONFIG   void config()
+
+#define DISABLED   0
+#define ENABLED    1
 
 #define MACRO_STRING(...) __MACRO_STRING(__VA_ARGS__)
 #define __MACRO_STRING(...) # __VA_ARGS__

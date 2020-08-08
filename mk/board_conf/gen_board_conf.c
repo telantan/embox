@@ -12,7 +12,7 @@
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
-static int gen_dev_enabled(const char *dev_name, const char *status) {
+static int gen_dev_enabled(const char *dev_name) {
 	char buf[128];
 	char def[64];
 
@@ -96,17 +96,19 @@ int main() {
 	int i, j;
 	const struct uart_conf *uart;
 
+	config();
+
 	printf("#ifndef BOARD_CONFIG_H_\n");
 	printf("#define BOARD_CONFIG_H_\n\n");
 
 	for (i = 0; i < ARRAY_SIZE(uarts); i++) {
 		uart = &uarts[i];
 
-		if (strcmp(uart->status, "enabled") != 0) {
+		if (uart->status != ENABLED) {
 			continue;
 		}
 
-		gen_dev_enabled(uart->name, uart->status);
+		gen_dev_enabled(uart->name);
 
 		for (j = 0; j < ARRAY_SIZE(uart->dev.irqs); j++) {
 			if (gen_field_int(uart->name,
