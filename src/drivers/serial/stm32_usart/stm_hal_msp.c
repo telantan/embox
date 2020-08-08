@@ -9,6 +9,8 @@
 
 #include <drivers/serial/stm_usart.h>
 
+#include <config/board_config.h>
+
 static void USART_CLK_ENABLE(void *usart_base) {
 	switch((uintptr_t)usart_base) {
 #if defined(USART1) &&  defined(STM32_USART1_ENABLED)
@@ -43,7 +45,7 @@ static void USART_CLK_ENABLE(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		__HAL_RCC_USART6_CLK_ENABLE();
+		CONF_USART6_CLK_ENABLE_UART();
 		break;
 	}
 #endif
@@ -86,7 +88,7 @@ static void USART_TX_GPIO_CLK_ENABLE(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		USART6_TX_GPIO_CLK_ENABLE();
+		CONF_USART6_CLK_ENABLE_TX();
 		break;
 	}
 #endif
@@ -129,7 +131,7 @@ static void USART_RX_GPIO_CLK_ENABLE(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		USART6_RX_GPIO_CLK_ENABLE();
+		CONF_USART6_CLK_ENABLE_RX();
 		break;
 	}
 #endif
@@ -167,7 +169,7 @@ static uint16_t USART_RX_PIN(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		return USART6_RX_PIN;
+		return CONF_USART6_PIN_RX_NR;
 	}
 #endif
 	default:
@@ -205,7 +207,7 @@ static uint16_t USART_TX_PIN(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		return USART6_TX_PIN;
+		return CONF_USART6_PIN_TX_NR;
 	}
 #endif
 	default:
@@ -243,7 +245,7 @@ static GPIO_TypeDef *USART_RX_GPIO_PORT(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		return USART6_RX_GPIO_PORT;
+		return CONF_USART6_PIN_RX_PORT;
 	}
 #endif
 	default:
@@ -281,7 +283,7 @@ static GPIO_TypeDef *USART_TX_GPIO_PORT(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		return USART6_TX_GPIO_PORT;
+		return CONF_USART6_PIN_TX_PORT;
 	}
 #endif
 	default:
@@ -319,7 +321,7 @@ static uint8_t USART_TX_AF(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		return USART6_TX_AF;
+		return CONF_USART6_PIN_TX_AF;
 	}
 #endif
 	default:
@@ -357,7 +359,7 @@ static uint8_t USART_RX_AF(void *usart_base) {
 #endif
 #if defined(USART6) &&  defined(STM32_USART6_ENABLED)
 	case (uintptr_t)USART6: {
-		return USART6_RX_AF;
+		return CONF_USART6_PIN_RX_AF;
 	}
 #endif
 	default:
